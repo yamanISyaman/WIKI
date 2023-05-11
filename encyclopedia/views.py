@@ -1,4 +1,5 @@
 import markdown2
+from django.http import HttpResponse
 from django.shortcuts import render
 from . import util
 
@@ -10,10 +11,11 @@ def index(request):
 
 
 def getpage(request, pagename):
-    html = markdown2.markdown(util.get_entry(pagename))
+    html = util.get_entry(pagename)
     if html:
-        return render(request, html)
+        return HttpResponse(markdown2.markdown(html))
     else:
+        #return HttpResponse("error 404")
         return render(request, "encyclopedia/404.html", {
 "pagename": pagename
     })
