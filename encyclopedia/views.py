@@ -1,10 +1,30 @@
 import markdown2
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+
 from . import util
 
 
 def index(request):
+    
+    q = request.GET.get("q")
+    if q:
+        entries = util.list_entries()
+        results = []
+
+        for entry in entries:
+            if q == entry:
+                return HttpResponseRedirect(f"/{q}")
+            elif q in entry:
+                results.append(entry)
+
+        if results:    
+            return render(request, "encyclopedia/index.html", {
+                    "entries": results
+                })
+        else:
+            return HttpResponse("NO RESULTS")
+
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
