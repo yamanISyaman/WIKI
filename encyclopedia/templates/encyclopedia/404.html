@@ -1,11 +1,9 @@
-<!DOCTYPE html>
+{% extends "encyclopedia/layout.html" %}
 
-<html lang="en">
-    <head>
-        <title>Error 404</title>
-    </head>
-    <body>
-        <h1><b>Error 404:</b></h1>
-        <b>the page "{{ pagename }}" was not found</b>
-    </body>
-</html>
+{% block title %}
+    Error 404
+{% endblock %}
+{% block body %}
+    <h1><b>Error 404:</b></h1>
+    <b>the page "{{ pagename }}" was not found</b>
+{% endblock %}

@@ -6,7 +6,7 @@ from . import util
 
 
 def index(request):
-    
+
     q = request.GET.get("q")
     if q:
         entries = util.list_entries()
@@ -18,25 +18,26 @@ def index(request):
             elif q in entry:
                 results.append(entry)
 
-        if results:    
+        if results:
             return render(request, "encyclopedia/index.html", {
-                    "entries": results
-                })
+                "entries": results,
+                "heading": "Search Results",
+            })
         else:
             return HttpResponse("NO RESULTS")
 
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(),
+        "heading": "All Pages",
     })
 
 
 def getpage(request, pagename):
     html = util.get_entry(pagename)
     if html:
-        return HttpResponse(markdown2.markdown(html))
+        return render(request, "encyclopedia/entries.html", {
+            "pagename": pagename,
+            "html": markdown2.markdown(html)
+})
     else:
-        #return HttpResponse("error 404")
-        return render(request, "encyclopedia/404.html", {
-"pagename": pagename
-    })
-
+        return render(request, "encyclopedia/404.html", {"pagename": pagename})
