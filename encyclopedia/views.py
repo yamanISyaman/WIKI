@@ -1,12 +1,16 @@
 import markdown2
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-
+from django import forms
+from django.urls import reverse
 from . import util
 
 
-def index(request):
+class EntryTextForm(forms.Form):
+    title = forms.CharField(label="Title")
 
+
+def index(request):
     q = request.GET.get("q")
     if q:
         entries = util.list_entries()
@@ -37,7 +41,21 @@ def getpage(request, pagename):
     if html:
         return render(request, "encyclopedia/entries.html", {
             "pagename": pagename,
-            "html": markdown2.markdown(html)
-})
+            "html": markdown2.markdown(html),
+            "data": ""
+        })
     else:
         return render(request, "encyclopedia/404.html", {"pagename": pagename})
+
+
+def add_entry(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        entry = request.POST.get("entry")
+        util.save_entry(title, entry)
+        return HttpResponseRedirect(reverse("index"))
+    return render(request, "encyclopedia/entrypage.html", {
+        "title": "Add Entry",
+        "form": EntryTextForm(),
+        "button": "Add"
+    })
