@@ -6,7 +6,7 @@
 
 {% block body %}
     <h1>{{ title }}</h1>
-    <form action="{% url 'addentry' %}" method="post">
+    <form action="/{{ url }}/{{ name }}" method="post">
         {% csrf_token %}
         {{ form }}
         <br>
